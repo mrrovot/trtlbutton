@@ -1,0 +1,158 @@
+<h1 class="font-light text-center w-4/5 md:w-full  m-0 m-auto">Simple button generator to get paid in TurtleCoin</h1>
+
+<div class="mt-10 md:w-full w-4/5 m-0 m-auto">
+  <p class="block">Easily generate a button to accept TurtleCoin in your website, it is powered by <a href="https://turtlepay.io" class="text-green no-underline" target="_blank">TurtlePay™</a> behind the scenes.</p>
+   &nbsp;
+  <p class="block">You can choose a redirect URL on success, once the transaction goes through the user will be redirected to the page you've chosen and we'll add a query string of the tx hash, for example <code class="px-2 py-2 bg-grey-lightest">http://yoursite.com/thankyou?txHash=the_tx_hash</code>.</p>
+   &nbsp;
+  <p class="block">To edit the styling of the button on your website, add any css rules you wish to <code class="px-2 py-2 bg-grey-lightest">.trtl-btn > input { }</code>. </p>
+   &nbsp;
+  <p class="block">Advantages over showing your wallet and ask for payments: the end user can see a live loader of the status of the transaction, can get qr code, and also gets redirected when the payment goes through.</p>
+     &nbsp;
+  <p class="block">You can see a working demo here: <a href="https://trtlbutton.surge.sh" class="text-green no-underline" target="_blank">trtlbutton.surge.sh</a> </p>
+
+
+  
+</div>
+<div class="flex md:flex-row flex-col mt-16 -mx-10 items-center md:items-start">
+   <div class="flex flex-col px-10 md:justify-start">
+    <div class="mb-4">
+        <input type="" name="wallet" placeholder="Your Wallet" id="" class="bg-grey-lightest border border-green  py-2  px-2" required>
+    </div>
+     <div class="mb-4">
+        <input type="number" name="amount" placeholder="Amount in TRTL" id="" class="bg-grey-lightest border border-green  py-2  px-2" required>
+    </div>
+    <div class="mb-8">
+        <input type="url" pattern="https://.*" name="url" placeholder="Redirect URL On Success" id="" class="bg-grey-lightest border border-green  py-2  px-2">
+    </div>
+    <div class="mb-4">
+         <button id="generateButton" class=" m-0 m-auto md:m-0 mb-10 w-full py-3 px-4 bg-white border-2 border-green text-center rounded text-green cursor-pointer text-lg focus:outline-none hover:bg-green hover:text-white">Generate Button </button>
+    </div>
+    </div>
+    <div class="px-10 w-4/5">
+       <div class="bg-grey-lightest p-6 ">
+        <div class="mb-12">
+          <div class="mb-3 font-semibold">
+            Copy this script before the end of your body tag (<code>&lt;/body&gt;</code>):
+          </div>
+
+          <code style="word-wrap: break-word">
+              &lt;script src="https://trtlbutton.com/javascripts/trtlButton.min.js"&gt;&lt;/script&gt;
+          </code>
+  
+        </div>
+        <div class="mb-4">
+          <div class="mb-3 font-semibold">
+                  Insert this div where you want the button to show: 
+
+          </div>
+              <code id="btnDiv" style="word-wrap: break-word">
+                   &lt;div class="trtl-btn" data-trtlbutton=""&gt;&lt;/div&gt
+              </code>
+                
+            
+        </div>
+        
+
+         
+       </div> 
+    </div>
+</div>
+<div class="mt-16">
+    <div class="mb-6">
+      <h2 class="font-light md:text-left text-center">Preview:</h2>
+    </div>
+    <div class="previewDiv" id="trtl-btn">
+      
+    </div>
+    <div class="text-md text-green-dark">
+        <div id="previewBtn" class="hidden m-0 m-auto md:m-0 mb-10 md:mb-4 py-3 px-4 bg-green text-center w-64 rounded text-white cursor-pointer text-lg hover:bg-green-light focus:outline-none">
+            Pay TRTL
+        </div>
+    </div>
+</div>
+
+<div id="turtlePayButtonModal" class="turtlePayButtonModal">
+    <!-- Modal content -->
+    <div class="turtlePayButtonModalContent rounded">
+        <span class="turtlePayButtonModalClose">&times;</span>
+        <div>
+            <div class="mt-6" id="paymentDetails">
+                <iframe src="/" class="w-full" height="520px" id="turtlePayButtonIframe" data-turtle="adam"></iframe>
+            </div>
+        </div>
+    </div>
+  </div>  
+
+
+ <script>
+  let wallet;
+  let amount; 
+  let redirectUrl;
+
+  
+    document.querySelector('#generateButton').addEventListener('click', function() {
+      sendToAddress = document.getElementsByName('wallet')[0].value
+      amount = document.getElementsByName('amount')[0].value
+      redirectUrl = document.getElementsByName('url')[0].value
+      console.log(wallet,amount,redirectUrl)
+      
+      divToCopy = document.querySelector("#btnDiv");
+    
+      
+      if(wallet == "" || amount == "") {
+        alert('Please input the amount and your wallet to generate the button')
+      } else {
+
+        axios.post('/generate_button', {sendToAddress, amount, redirectUrl})
+        .then( function(res){
+          console.log(res.data)
+          const buttonPayload = res.data.buttonPayload;
+          divToCopy.innerHTML = `  &lt;div class="trtl-btn" data-trtlbutton="${buttonPayload}" &gt;&lt;/div&gt`
+          previewBtn =  document.querySelector('#previewBtn')
+         previewBtn.innerText = `Pay ${amount} TRTL`
+          previewBtn.style.display = "block"
+
+          turtlePayButtonIframe = document.querySelector('#turtlePayButtonIframe')
+
+          turtlePayButtonIframe.src = `/pay/?buttonPayload=${buttonPayload}`
+        })
+        .catch( function(e) {
+          console.log(e)
+        })
+          
+      }
+
+
+    })
+
+    // request for a sendToAddress from TurtlePay
+    // Get the modal
+    var turtlePayButtonModal = document.getElementById('turtlePayButtonModal');
+
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("turtlePayButtonModalClose")[0];
+
+    // When the user clicks the button, open the modal 
+
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function() {
+        turtlePayButtonModal.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+        if (event.target == turtlePayButtonModal) {
+            turtlePayButtonModal.style.display = "none";
+        }
+    }
+
+
+    document.querySelector("#previewBtn").addEventListener('click', function() {
+        turtlePayButtonModal.style.display = "block";
+    })
+
+    var socket = io(`/${"{{id}}"}`);
+  
+  </script>
