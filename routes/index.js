@@ -100,6 +100,8 @@ router.post('/turtlepay', (req, res) => {
       // update the client with confirmations remaining
       socketio.emit('message', {
         status: req.body.status,
+        amountExpected: req.body.request.amount,
+        amountReceived: req.body.amount,
         confirmationsRemaining: req.body.confirmationsRemaining
       })
     }

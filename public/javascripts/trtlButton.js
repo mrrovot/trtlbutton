@@ -100,7 +100,6 @@ var trtlButtonModalCode = `<div id="trtlButtonModal" class="trtlButtonModal">
 var trtlDiv = document.createElement("div");
 
 trtlDiv.innerHTML = trtlButtonModalCode;
-console.log(trtlDiv);
 document.body.appendChild(trtlDiv);
 
 var trtlButtonModal = document.getElementById("trtlButtonModal");
