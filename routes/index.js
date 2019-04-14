@@ -37,6 +37,8 @@ router.get('/pay/', function (req, res, next) {
 })
 
 router.post('/get-turtlepay-wallet', (req, res, next) => {
+  console.log('ip ', req.connection.remoteAddress)
+
   console.log(req.body)
   const turtlePayData = {
     buttonPayload: req.body.buttonPayload,
