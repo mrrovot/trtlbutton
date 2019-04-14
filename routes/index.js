@@ -7,7 +7,7 @@ router.get('/', function (req, res, next) {
   // clear cookies for the user when he visits the homepage
   res.clearCookie('txnHash')
 
-  // get the namespace for sockets and to send tu trtl
+  // get the namespace for sockets and to send to trtl
   uniquePaymentIdentifier = res.locals.nameSpace
 
   // send msg to client to make sure all working
@@ -19,6 +19,7 @@ router.get('/', function (req, res, next) {
 
 router.get('/pay/', function (req, res, next) {
   // clear cookies for the user when he visits the homepage
+  console.log('ip ', req.connection.remoteAddress)
   res.clearCookie('txnHash')
 
   // get the namespace for sockets and to send tu trtl
