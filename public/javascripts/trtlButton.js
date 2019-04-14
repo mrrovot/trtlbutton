@@ -32,6 +32,7 @@ trtlButtonStyle.innerHTML = `    /* The Modal (background) */
         padding: 20px;
         border: 1px solid #888;
         width: 45%;
+        z-index: 99;
     }
 
     /* The Close Button */
@@ -73,9 +74,9 @@ trtlButtonStyle.innerHTML = `    /* The Modal (background) */
       }
 
     @media only screen and (max-width: 600px) {
-  .turtlePayButtonModalContent {
-    width: 95%;
-  }
+      .trtlButtonModalContent {
+        width: 85%;
+      }
     }`;
 
 // // Get the first script tag
