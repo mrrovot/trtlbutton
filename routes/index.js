@@ -38,6 +38,11 @@ router.get('/pay/', function (req, res, next) {
 
 router.post('/get-turtlepay-wallet', (req, res, next) => {
   console.log('ip ', req.connection.remoteAddress)
+  console.log('ip ', req.headers['x-forwarded-for']
+)
+
+
+
 
   console.log(req.body)
   const turtlePayData = {
